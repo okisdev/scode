@@ -11,7 +11,7 @@ export function McpPage() {
             Manage Model Context Protocol servers
           </p>
         </div>
-        <Button>
+        <Button size='sm'>
           <Plus className='mr-2 size-4' />
           Add Server
         </Button>

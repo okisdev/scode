@@ -1,7 +1,9 @@
-import { Home } from 'lucide-react';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { Home, Settings } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,12 +20,19 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
-  const { installed } = useSoftware();
+  const { enabled } = useSoftware();
+
+  const handleDragStart = () => {
+    getCurrentWindow().startDragging();
+  };
 
   return (
     <Sidebar variant='inset'>
       <SidebarHeader>
-        <div className='flex items-center gap-2 px-2 py-2'>
+        <div
+          className='flex items-center gap-2 px-2 py-2 pt-6'
+          onMouseDown={handleDragStart}
+        >
           <span className='font-semibold'>Scode</span>
         </div>
       </SidebarHeader>
@@ -45,26 +54,42 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Software</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {installed.map((software) => (
-                <SidebarMenuItem key={software.id}>
-                  <SidebarMenuButton
-                    isActive={currentPage === software.id}
-                    onClick={() => onNavigate(software.id)}
-                    tooltip={software.name}
-                  >
-                    <software.icon />
-                    <span>{software.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {enabled.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Software</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {enabled.map((software) => (
+                  <SidebarMenuItem key={software.id}>
+                    <SidebarMenuButton
+                      isActive={currentPage === software.id}
+                      onClick={() => onNavigate(software.id)}
+                      tooltip={software.name}
+                    >
+                      <software.icon />
+                      <span>{software.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={currentPage === 'settings'}
+              onClick={() => onNavigate('settings')}
+              tooltip='Settings'
+            >
+              <Settings />
+              <span>Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

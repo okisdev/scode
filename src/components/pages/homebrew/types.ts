@@ -1,5 +1,5 @@
 export interface ConfirmAction {
-  type: 'uninstall' | 'untap' | 'cleanup' | 'clear-logs';
+  type: 'uninstall' | 'untap' | 'cleanup';
   name?: string;
   isCask?: boolean;
 }

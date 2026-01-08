@@ -1,13 +1,20 @@
 import { homeDir } from '@tauri-apps/api/path';
 import { exists } from '@tauri-apps/plugin-fs';
-import { Beer, type LucideIcon, Plug, Terminal } from 'lucide-react';
+import { Plug } from 'lucide-react';
+import type { ComponentType, SVGProps } from 'react';
+
+import { ClaudeAiIcon } from '@/components/ui/svgs/claude-code';
+import { Homebrew } from '@/components/ui/svgs/homebrew';
+
+export type SoftwareMode = 'detect' | 'direct';
 
 export interface Software {
   id: string;
   name: string;
   description: string;
-  icon: LucideIcon;
-  detectPaths: string[];
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  mode: SoftwareMode;
+  detectPaths: string[]; // Only used when mode is 'detect'
 }
 
 export const SOFTWARE_LIST: Software[] = [
@@ -15,7 +22,8 @@ export const SOFTWARE_LIST: Software[] = [
     id: 'claude-code',
     name: 'Claude Code',
     description: 'Claude Code settings',
-    icon: Terminal,
+    icon: ClaudeAiIcon,
+    mode: 'detect',
     detectPaths: ['~/.claude.json', '~/.claude/'],
   },
   {
@@ -23,13 +31,15 @@ export const SOFTWARE_LIST: Software[] = [
     name: 'MCP',
     description: 'MCP servers',
     icon: Plug,
-    detectPaths: [], // Always available if Claude Code exists
+    mode: 'direct', // Always available, no detection needed
+    detectPaths: [],
   },
   {
     id: 'homebrew',
     name: 'Homebrew',
     description: 'Homebrew packages',
-    icon: Beer,
+    icon: Homebrew,
+    mode: 'detect',
     detectPaths: ['/opt/homebrew', '/usr/local/Homebrew'],
   },
 ];
@@ -37,30 +47,27 @@ export const SOFTWARE_LIST: Software[] = [
 async function expandPath(path: string): Promise<string> {
   if (path.startsWith('~/')) {
     const home = await homeDir();
-    return path.replace('~/', home);
+    // homeDir() may return path with trailing slash, ensure no double slashes
+    const normalizedHome = home.endsWith('/') ? home.slice(0, -1) : home;
+    return path.replace('~', normalizedHome);
   }
   return path;
 }
 
 export async function detectSoftware(software: Software): Promise<boolean> {
-  // MCP is available if Claude Code is detected
-  if (software.id === 'mcp') {
-    const claudeCode = SOFTWARE_LIST.find((s) => s.id === 'claude-code');
-    if (claudeCode) {
-      return detectSoftware(claudeCode);
-    }
-    return false;
-  }
-
-  if (software.detectPaths.length === 0) {
+  // Direct mode: always available
+  if (software.mode === 'direct') {
     return true;
   }
 
+  // Detect mode: check if paths exist
   for (const path of software.detectPaths) {
-    const expandedPath = await expandPath(path);
-    if (await exists(expandedPath)) {
-      return true;
-    }
+    try {
+      const expandedPath = await expandPath(path);
+      if (await exists(expandedPath)) {
+        return true;
+      }
+    } catch {}
   }
   return false;
 }

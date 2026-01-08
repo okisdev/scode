@@ -35,6 +35,7 @@ export interface Tap {
 
 export interface LogEntry {
   timestamp: string;
+  category: string;
   action: string;
   target: string;
   success: boolean;

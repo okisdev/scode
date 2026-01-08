@@ -8,7 +8,6 @@ import {
   RefreshCw,
   Sparkles,
   Stethoscope,
-  Trash2,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -61,8 +60,6 @@ export function HomebrewPage() {
     doctor,
     tapRepo,
     untapRepo,
-    refreshLogs,
-    clearAllLogs,
   } = useHomebrew();
 
   const [formulaeSearch, setFormulaeSearch] = useState('');
@@ -146,9 +143,6 @@ export function HomebrewPage() {
       case 'cleanup':
         await cleanup();
         break;
-      case 'clear-logs':
-        await clearAllLogs();
-        break;
       default:
         break;
     }
@@ -176,12 +170,6 @@ export function HomebrewPage() {
           title: 'Cleanup Homebrew?',
           description:
             'This will remove old versions and clear the download cache. This action cannot be undone.',
-        };
-      case 'clear-logs':
-        return {
-          title: 'Clear all logs?',
-          description:
-            'This will delete all operation history. This action cannot be undone.',
         };
       default:
         return { title: '', description: '' };
@@ -219,6 +207,7 @@ export function HomebrewPage() {
           className='gap-2'
           disabled={loading || operating}
           onClick={refresh}
+          size='sm'
           variant='outline'
         >
           <RefreshCw className={`size-4 ${loading ? 'animate-spin' : ''}`} />
@@ -380,6 +369,7 @@ export function HomebrewPage() {
               className='gap-2'
               disabled={operating || outdated.length === 0}
               onClick={upgradeAllPackages}
+              size='sm'
             >
               {operating ? (
                 <Loader2 className='size-4 animate-spin' />
@@ -413,33 +403,11 @@ export function HomebrewPage() {
 
         {/* Logs Tab */}
         <TabsContent className='mt-4 flex flex-1 flex-col gap-4' value='logs'>
-          <div className='flex shrink-0 items-center justify-between'>
-            <div className='space-y-1'>
-              <h3 className='font-semibold'>Operation History</h3>
-              <p className='text-muted-foreground text-sm'>
-                {logs.length} operations recorded
-              </p>
-            </div>
-            <div className='flex gap-2'>
-              <Button
-                className='gap-2'
-                disabled={operating}
-                onClick={refreshLogs}
-                variant='outline'
-              >
-                <RefreshCw className='size-4' />
-                Refresh
-              </Button>
-              <Button
-                className='gap-2'
-                disabled={operating || logs.length === 0}
-                onClick={() => setConfirmAction({ type: 'clear-logs' })}
-                variant='outline'
-              >
-                <Trash2 className='size-4' />
-                Clear
-              </Button>
-            </div>
+          <div className='shrink-0 space-y-1'>
+            <h3 className='font-semibold'>Operation History</h3>
+            <p className='text-muted-foreground text-sm'>
+              {logs.length} operations recorded
+            </p>
           </div>
 
           <LogsList loading={loading} logs={logs} />

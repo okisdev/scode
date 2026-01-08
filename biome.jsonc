@@ -14,7 +14,12 @@
       "jsxQuoteStyle": "single",
       "quoteStyle": "single",
       "trailingCommas": "es5"
-    }
+    },
+    "globals": [
+      "__APP_VERSION__",
+      "__BUILD_HASH__",
+      "__BUILD_TIME__"
+    ]
   },
   "linter": {
     "rules": {

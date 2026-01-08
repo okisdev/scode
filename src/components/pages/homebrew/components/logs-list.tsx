@@ -20,7 +20,8 @@ function LogLine({ entry, index }: { entry: LogEntry; index: number }) {
         onClick={() => hasOutput && setExpanded(!expanded)}
       >
         <span className='shrink-0 text-zinc-500'>[{entry.timestamp}]</span>
-        <span className='w-24 shrink-0 text-blue-400'>
+        <span className='shrink-0 text-purple-400'>[{entry.category}]</span>
+        <span className='shrink-0 text-blue-400'>
           [{entry.action.toLowerCase()}]
         </span>
         <span

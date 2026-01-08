@@ -1,4 +1,10 @@
 export const queryKeys = {
+  // Scode app config
+  scode: {
+    all: ['scode'] as const,
+    config: () => [...queryKeys.scode.all, 'config'] as const,
+  },
+
   // Software
   software: {
     all: ['software'] as const,

@@ -68,6 +68,7 @@ export function PackageItem({
             className='h-7 px-2 text-xs'
             disabled={operating || isInstalled}
             onClick={onInstall}
+            size='sm'
             variant={isInstalled ? 'ghost' : 'outline'}
           >
             {isInstalled ? (
@@ -89,6 +90,7 @@ export function PackageItem({
                 className='h-7 px-2 text-xs'
                 disabled={operating}
                 onClick={onUpgrade}
+                size='sm'
                 variant='outline'
               >
                 <ArrowUpCircle className='mr-1 size-3' />
@@ -100,6 +102,7 @@ export function PackageItem({
                 className='size-7 p-0'
                 disabled={operating}
                 onClick={onUninstall}
+                size='sm'
                 variant='ghost'
               >
                 <Trash2 className='size-3.5' />

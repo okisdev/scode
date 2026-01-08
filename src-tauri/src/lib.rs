@@ -45,6 +45,7 @@ pub struct Tap {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LogEntry {
     pub timestamp: String,
+    pub category: String,
     pub action: String,
     pub target: String,
     pub success: bool,
@@ -120,6 +121,7 @@ fn run_brew_command_with_log(
 
     let entry = LogEntry {
         timestamp,
+        category: "homebrew".to_string(),
         action: action.to_string(),
         target: target.to_string(),
         success: result.is_ok(),
@@ -175,6 +177,7 @@ async fn get_logs(category: String, limit: Option<usize>) -> Result<Vec<LogEntry
 
             Some(LogEntry {
                 timestamp,
+                category: category.clone(),
                 action,
                 target,
                 success,
@@ -469,6 +472,7 @@ async fn brew_doctor() -> Result<String, String> {
     let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
     let entry = LogEntry {
         timestamp,
+        category: "homebrew".to_string(),
         action: "DOCTOR".to_string(),
         target: "system".to_string(),
         success: output.status.success(),
@@ -503,6 +507,56 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_http::init())
+        .setup(|app| {
+            use tauri::menu::{MenuBuilder, MenuItemBuilder, PredefinedMenuItem, SubmenuBuilder};
+            use tauri::Emitter;
+
+            let about_item = MenuItemBuilder::with_id("about", "About Scode").build(app)?;
+
+            let app_submenu = SubmenuBuilder::new(app, "Scode")
+                .item(&about_item)
+                .separator()
+                .item(&PredefinedMenuItem::hide(app, Some("Hide Scode"))?)
+                .item(&PredefinedMenuItem::hide_others(app, None)?)
+                .item(&PredefinedMenuItem::show_all(app, None)?)
+                .separator()
+                .item(&PredefinedMenuItem::quit(app, Some("Quit Scode"))?)
+                .build()?;
+
+            let edit_submenu = SubmenuBuilder::new(app, "Edit")
+                .item(&PredefinedMenuItem::undo(app, None)?)
+                .item(&PredefinedMenuItem::redo(app, None)?)
+                .separator()
+                .item(&PredefinedMenuItem::cut(app, None)?)
+                .item(&PredefinedMenuItem::copy(app, None)?)
+                .item(&PredefinedMenuItem::paste(app, None)?)
+                .item(&PredefinedMenuItem::select_all(app, None)?)
+                .build()?;
+
+            let window_submenu = SubmenuBuilder::new(app, "Window")
+                .item(&PredefinedMenuItem::minimize(app, None)?)
+                .item(&PredefinedMenuItem::maximize(app, None)?)
+                .separator()
+                .item(&PredefinedMenuItem::close_window(app, Some("Close"))?)
+                .build()?;
+
+            let menu = MenuBuilder::new(app)
+                .item(&app_submenu)
+                .item(&edit_submenu)
+                .item(&window_submenu)
+                .build()?;
+
+            app.set_menu(menu)?;
+
+            app.on_menu_event(move |app_handle, event| {
+                if event.id().0.as_str() == "about" {
+                    let _ = app_handle.emit("show-about", ());
+                }
+            });
+
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             greet,
             get_logs,

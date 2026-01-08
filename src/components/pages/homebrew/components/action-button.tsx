@@ -23,6 +23,7 @@ export function ActionButton({
       className='gap-2'
       disabled={disabled || loading}
       onClick={onClick}
+      size='sm'
       variant={variant}
     >
       {loading ? <Loader2 className='size-4 animate-spin' /> : icon}

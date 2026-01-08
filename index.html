@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scode</title>
+    <script>
+    'use strict';
+    (() => {
+      const theme = localStorage.getItem('scode-theme') || 'system';
+      const isDark =
+        theme === 'dark' ||
+        (theme === 'system' &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) document.documentElement.classList.add('dark');
+    })();
+    </script>
   </head>
 
   <body>

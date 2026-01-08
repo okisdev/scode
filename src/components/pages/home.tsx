@@ -1,45 +1,76 @@
-import { Skeleton } from '@/components/ui/skeleton';
-import { useSoftware } from '@/hooks/use-software';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { useScodeConfig } from '@/hooks/use-scode-config';
+import { type SoftwareStatus, useSoftware } from '@/hooks/use-software';
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  description: string;
-  icon: React.ReactNode;
+interface ToolCardProps {
+  status: SoftwareStatus;
+  onToggle: (enabled: boolean) => void;
+  disabled?: boolean;
 }
 
-function StatCard({ title, value, description, icon }: StatCardProps) {
+function ToolCard({ status, onToggle, disabled }: ToolCardProps) {
+  const { software, installed, enabled } = status;
+  const isDirectMode = software.mode === 'direct';
+  const canEnable = isDirectMode || installed;
+
   return (
-    <div className='flex flex-col gap-2 rounded-xl bg-muted/50 p-5'>
-      <div className='flex items-center justify-between'>
-        <span className='font-medium text-muted-foreground text-sm'>
-          {title}
-        </span>
-        <div className='flex size-8 items-center justify-center rounded-full bg-muted'>
-          {icon}
+    <div className='flex flex-col gap-4 rounded-xl bg-muted/50 p-5'>
+      <div className='flex items-center gap-3'>
+        <div className='flex size-10 items-center justify-center rounded-full bg-muted'>
+          <software.icon className='size-5 text-muted-foreground' />
+        </div>
+        <div className='flex-1'>
+          <h3 className='font-semibold'>{software.name}</h3>
+          <p className='text-muted-foreground text-sm'>
+            {software.description}
+          </p>
         </div>
       </div>
-      <div className='font-bold text-3xl'>{value}</div>
-      <span className='text-muted-foreground text-sm'>{description}</span>
-    </div>
-  );
-}
 
-function StatCardSkeleton() {
-  return (
-    <div className='flex flex-col gap-2 rounded-xl bg-muted/50 p-5'>
       <div className='flex items-center justify-between'>
-        <Skeleton className='h-4 w-20' />
-        <Skeleton className='size-8 rounded-full' />
+        {isDirectMode ? (
+          <Badge
+            className='border-0 bg-blue-500/10 text-blue-600'
+            variant='secondary'
+          >
+            Available
+          </Badge>
+        ) : installed ? (
+          <Badge
+            className='border-0 bg-green-500/10 text-green-600'
+            variant='secondary'
+          >
+            Installed
+          </Badge>
+        ) : (
+          <Badge
+            className='border-0 bg-muted text-muted-foreground'
+            variant='secondary'
+          >
+            Not Installed
+          </Badge>
+        )}
+
+        {canEnable && (
+          <Switch
+            checked={enabled}
+            disabled={disabled}
+            onCheckedChange={onToggle}
+          />
+        )}
       </div>
-      <Skeleton className='h-9 w-12' />
-      <Skeleton className='h-4 w-32' />
     </div>
   );
 }
 
 export function HomePage() {
-  const { installed, loading } = useSoftware();
+  const { allWithStatus } = useSoftware();
+  const { toggleEnabled, isToggling } = useScodeConfig();
+
+  const handleToggle = (softwareId: string, enabled: boolean) => {
+    toggleEnabled(softwareId, enabled);
+  };
 
   return (
     <div className='flex flex-1 flex-col gap-6 p-6'>
@@ -50,28 +81,24 @@ export function HomePage() {
         </p>
       </div>
 
-      <div className='grid gap-4 md:grid-cols-3'>
-        {loading ? (
-          <>
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-          </>
-        ) : installed.length > 0 ? (
-          installed.map((software) => (
-            <StatCard
-              description={software.description}
-              icon={<software.icon className='size-4 text-muted-foreground' />}
-              key={software.id}
-              title={software.name}
-              value='-'
+      <div className='space-y-4'>
+        <div className='space-y-1'>
+          <h2 className='font-semibold text-lg'>Tools</h2>
+          <p className='text-muted-foreground text-sm'>
+            Select which tools to show in the sidebar
+          </p>
+        </div>
+
+        <div className='grid gap-4 md:grid-cols-3'>
+          {allWithStatus.map((status) => (
+            <ToolCard
+              disabled={isToggling}
+              key={status.software.id}
+              onToggle={(enabled) => handleToggle(status.software.id, enabled)}
+              status={status}
             />
-          ))
-        ) : (
-          <div className='col-span-3 rounded-xl bg-muted/50 p-8 text-center'>
-            <p className='text-muted-foreground'>No software detected</p>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );

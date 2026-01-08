@@ -44,6 +44,7 @@ export function TapsTab({
           className='gap-2'
           disabled={operating || !newTapName.trim()}
           onClick={handleAddTap}
+          size='sm'
           variant='outline'
         >
           <Plus className='size-4' />
