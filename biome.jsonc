@@ -1,0 +1,79 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": [
+		"ultracite/biome/core",
+		"ultracite/biome/react",
+		"ultracite/biome/next"
+	],
+	"formatter": {
+		"indentStyle": "space",
+		"indentWidth": 2
+	},
+	"javascript": {
+		"formatter": {
+			"jsxQuoteStyle": "single",
+			"quoteStyle": "single",
+			"trailingCommas": "es5"
+		}
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				"noUnusedImports": {
+					"level": "warn",
+					"fix": "none",
+					"options": {}
+				},
+				"noUnusedVariables": {
+					"level": "warn",
+					"fix": "none",
+					"options": {}
+				},
+				"noUnusedFunctionParameters": "warn",
+				"useExhaustiveDependencies": {
+					"level": "warn",
+					"fix": "none",
+					"options": {}
+				},
+				"useSingleJsDocAsterisk": "off",
+				"useJsonImportAttributes": "off"
+			},
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "warn",
+				"noStaticOnlyClass": "off"
+			},
+			"nursery": {
+				"noShadow": "warn",
+				"useMaxParams": "off",
+				"noLeakedRender": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "warn",
+				"useAwait": "off",
+				"noConsole": "off",
+				"noArrayIndexKey": "off"
+			},
+			"style": {
+				"noEnum": "off",
+				"noMagicNumbers": "off",
+				"noNestedTernary": "warn",
+				"noExportedImports": "off",
+				"useNamingConvention": "off",
+				"useConsistentTypeDefinitions": "off"
+			},
+			"performance": {
+				"useTopLevelRegex": "warn",
+				"noNamespaceImport": "warn",
+				"noBarrelFile": "warn"
+			}
+		}
+	},
+	"json": {
+		"formatter": {
+			"lineWidth": 1
+		}
+	},
+	"files": {
+		"includes": ["!**/worker-configuration.d.ts", "!**/components/ui"]
+	}
+}
