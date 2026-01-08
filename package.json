@@ -12,6 +12,7 @@
     "lint:fix": "pnpm exec biome check --fix"
   },
   "dependencies": {
+    "@fontsource/geist-sans": "^5.2.5",
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/api": "^2",
