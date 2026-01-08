@@ -1,28 +1,26 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
 export function ProjectsPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div>
-        <h1 className="text-2xl font-bold">Projects</h1>
-        <p className="text-muted-foreground">
+    <div className='flex flex-1 flex-col gap-6 p-6'>
+      <div className='space-y-1'>
+        <h1 className='font-bold text-2xl'>Projects</h1>
+        <p className='text-muted-foreground'>
           Manage project-specific configurations
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Project List</CardTitle>
-          <CardDescription>
+      <div className='rounded-xl bg-muted/50 p-5'>
+        <div className='space-y-1'>
+          <h3 className='font-semibold'>Project List</h3>
+          <p className='text-muted-foreground text-sm'>
             Projects with Claude Code configurations
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
+          </p>
+        </div>
+        <div className='mt-4'>
+          <p className='text-muted-foreground text-sm'>
             Projects will be loaded from ~/.claude.json
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

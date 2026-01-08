@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import '@/styles/App.css';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
-import { HomePage } from '@/components/pages/home';
 import { ClaudeSettingsPage } from '@/components/pages/claude-settings';
+import { HomePage } from '@/components/pages/home';
 import { McpServersPage } from '@/components/pages/mcp-servers';
 import { ProjectsPage } from '@/components/pages/projects';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');

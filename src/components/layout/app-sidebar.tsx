@@ -1,11 +1,10 @@
-import { Home, Settings, Plug, FolderOpen } from 'lucide-react';
+import { FolderOpen, Home, Plug, Settings } from 'lucide-react';
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -42,18 +41,17 @@ interface AppSidebarProps {
 
 export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
   return (
-    <Sidebar>
+    <Sidebar variant='inset'>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Settings className="size-4" />
+        <div className='flex items-center gap-2 px-2 py-2'>
+          <div className='flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground'>
+            <Settings className='size-4' />
           </div>
-          <span className="font-semibold">Scode</span>
+          <span className='font-semibold'>Scode</span>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (

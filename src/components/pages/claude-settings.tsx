@@ -1,69 +1,71 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+interface SettingSectionProps {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+function SettingSection({ title, description, children }: SettingSectionProps) {
+  return (
+    <div className='rounded-xl bg-muted/50 p-5'>
+      <div className='space-y-1'>
+        <h3 className='font-semibold'>{title}</h3>
+        <p className='text-muted-foreground text-sm'>{description}</p>
+      </div>
+      <div className='mt-4'>{children}</div>
+    </div>
+  );
+}
 
 export function ClaudeSettingsPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div>
-        <h1 className="text-2xl font-bold">Claude Code Settings</h1>
-        <p className="text-muted-foreground">
+    <div className='flex flex-1 flex-col gap-6 p-6'>
+      <div className='space-y-1'>
+        <h1 className='font-bold text-2xl'>Claude Code Settings</h1>
+        <p className='text-muted-foreground'>
           Configure your Claude Code preferences
         </p>
       </div>
 
-      <Tabs defaultValue="general" className="flex-1">
+      <Tabs className='flex-1' defaultValue='general'>
         <TabsList>
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="plugins">Plugins</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+          <TabsTrigger value='general'>General</TabsTrigger>
+          <TabsTrigger value='plugins'>Plugins</TabsTrigger>
+          <TabsTrigger value='advanced'>Advanced</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sandbox Mode</CardTitle>
-              <CardDescription>
-                Configure sandbox settings for Claude Code
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Settings will be loaded from ~/.claude/settings.local.json
-              </p>
-            </CardContent>
-          </Card>
+        <TabsContent className='mt-4 space-y-4' value='general'>
+          <SettingSection
+            description='Configure sandbox settings for Claude Code'
+            title='Sandbox Mode'
+          >
+            <p className='text-muted-foreground text-sm'>
+              Settings will be loaded from ~/.claude/settings.local.json
+            </p>
+          </SettingSection>
         </TabsContent>
 
-        <TabsContent value="plugins" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Installed Plugins</CardTitle>
-              <CardDescription>
-                Manage your Claude Code plugins
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Plugin list will be loaded from ~/.claude/plugins/
-              </p>
-            </CardContent>
-          </Card>
+        <TabsContent className='mt-4 space-y-4' value='plugins'>
+          <SettingSection
+            description='Manage your Claude Code plugins'
+            title='Installed Plugins'
+          >
+            <p className='text-muted-foreground text-sm'>
+              Plugin list will be loaded from ~/.claude/plugins/
+            </p>
+          </SettingSection>
         </TabsContent>
 
-        <TabsContent value="advanced" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Environment Variables</CardTitle>
-              <CardDescription>
-                Configure environment variables for Claude Code
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Environment settings from ~/.claude/settings.json
-              </p>
-            </CardContent>
-          </Card>
+        <TabsContent className='mt-4 space-y-4' value='advanced'>
+          <SettingSection
+            description='Configure environment variables for Claude Code'
+            title='Environment Variables'
+          >
+            <p className='text-muted-foreground text-sm'>
+              Environment settings from ~/.claude/settings.json
+            </p>
+          </SettingSection>
         </TabsContent>
       </Tabs>
     </div>
