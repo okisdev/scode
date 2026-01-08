@@ -1,38 +1,16 @@
-import { FolderOpen, Home, Plug, Settings } from 'lucide-react';
-
+import { Home } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
-const menuItems = [
-  {
-    title: 'Home',
-    icon: Home,
-    id: 'home',
-  },
-  {
-    title: 'Claude Code',
-    icon: Settings,
-    id: 'claude-settings',
-  },
-  {
-    title: 'MCP Servers',
-    icon: Plug,
-    id: 'mcp-servers',
-  },
-  {
-    title: 'Projects',
-    icon: FolderOpen,
-    id: 'projects',
-  },
-];
+import { useSoftware } from '@/hooks/use-software';
 
 interface AppSidebarProps {
   currentPage: string;
@@ -40,13 +18,12 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
+  const { installed } = useSoftware();
+
   return (
     <Sidebar variant='inset'>
       <SidebarHeader>
         <div className='flex items-center gap-2 px-2 py-2'>
-          <div className='flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground'>
-            <Settings className='size-4' />
-          </div>
           <span className='font-semibold'>Scode</span>
         </div>
       </SidebarHeader>
@@ -54,15 +31,33 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={currentPage === 'home'}
+                  onClick={() => onNavigate('home')}
+                  tooltip='Home'
+                >
+                  <Home />
+                  <span>Home</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Software</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {installed.map((software) => (
+                <SidebarMenuItem key={software.id}>
                   <SidebarMenuButton
-                    isActive={currentPage === item.id}
-                    onClick={() => onNavigate(item.id)}
-                    tooltip={item.title}
+                    isActive={currentPage === software.id}
+                    onClick={() => onNavigate(software.id)}
+                    tooltip={software.name}
                   >
-                    <item.icon />
-                    <span>{item.title}</span>
+                    <software.icon />
+                    <span>{software.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

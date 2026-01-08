@@ -1,14 +1,14 @@
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function McpServersPage() {
+export function McpPage() {
   return (
     <div className='flex flex-1 flex-col gap-6 p-6'>
       <div className='flex items-center justify-between'>
         <div className='space-y-1'>
-          <h1 className='font-bold text-2xl'>MCP Servers</h1>
+          <h1 className='font-bold text-2xl'>MCP</h1>
           <p className='text-muted-foreground'>
-            Manage your Model Context Protocol servers
+            Manage Model Context Protocol servers
           </p>
         </div>
         <Button>
@@ -19,15 +19,13 @@ export function McpServersPage() {
 
       <div className='rounded-xl bg-muted/50 p-5'>
         <div className='space-y-1'>
-          <h3 className='font-semibold'>Global MCP Servers</h3>
+          <h3 className='font-semibold'>Global Servers</h3>
           <p className='text-muted-foreground text-sm'>
-            These servers are available across all projects
+            MCP servers available across all applications
           </p>
         </div>
         <div className='mt-4'>
-          <p className='text-muted-foreground text-sm'>
-            MCP servers will be loaded from ~/.claude.json
-          </p>
+          <p className='text-muted-foreground text-sm'>No servers configured</p>
         </div>
       </div>
     </div>

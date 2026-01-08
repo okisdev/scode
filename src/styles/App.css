@@ -130,7 +130,7 @@
     @apply border-border outline-ring/50;
   }
   html {
-    @apply overscroll-y-none scroll-smooth;
+    @apply overscroll-none scroll-smooth;
   }
   body {
     @apply bg-background text-foreground;

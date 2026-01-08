@@ -18,53 +18,51 @@ function SettingSection({ title, description, children }: SettingSectionProps) {
   );
 }
 
-export function ClaudeSettingsPage() {
+export function ClaudeCodePage() {
   return (
     <div className='flex flex-1 flex-col gap-6 p-6'>
       <div className='space-y-1'>
-        <h1 className='font-bold text-2xl'>Claude Code Settings</h1>
+        <h1 className='font-bold text-2xl'>Claude Code</h1>
         <p className='text-muted-foreground'>
-          Configure your Claude Code preferences
+          Manage Claude Code configuration
         </p>
       </div>
 
       <Tabs className='flex-1' defaultValue='general'>
         <TabsList>
           <TabsTrigger value='general'>General</TabsTrigger>
+          <TabsTrigger value='mcp'>MCP</TabsTrigger>
           <TabsTrigger value='plugins'>Plugins</TabsTrigger>
-          <TabsTrigger value='advanced'>Advanced</TabsTrigger>
         </TabsList>
 
         <TabsContent className='mt-4 space-y-4' value='general'>
           <SettingSection
-            description='Configure sandbox settings for Claude Code'
+            description='Configure sandbox settings'
             title='Sandbox Mode'
           >
             <p className='text-muted-foreground text-sm'>
-              Settings will be loaded from ~/.claude/settings.local.json
+              ~/.claude/settings.local.json
+            </p>
+          </SettingSection>
+        </TabsContent>
+
+        <TabsContent className='mt-4 space-y-4' value='mcp'>
+          <SettingSection
+            description='MCP servers configured in Claude Code'
+            title='MCP Servers'
+          >
+            <p className='text-muted-foreground text-sm'>
+              ~/.claude.json → mcpServers
             </p>
           </SettingSection>
         </TabsContent>
 
         <TabsContent className='mt-4 space-y-4' value='plugins'>
           <SettingSection
-            description='Manage your Claude Code plugins'
-            title='Installed Plugins'
+            description='Manage installed plugins'
+            title='Plugins'
           >
-            <p className='text-muted-foreground text-sm'>
-              Plugin list will be loaded from ~/.claude/plugins/
-            </p>
-          </SettingSection>
-        </TabsContent>
-
-        <TabsContent className='mt-4 space-y-4' value='advanced'>
-          <SettingSection
-            description='Configure environment variables for Claude Code'
-            title='Environment Variables'
-          >
-            <p className='text-muted-foreground text-sm'>
-              Environment settings from ~/.claude/settings.json
-            </p>
+            <p className='text-muted-foreground text-sm'>~/.claude/plugins/</p>
           </SettingSection>
         </TabsContent>
       </Tabs>

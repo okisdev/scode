@@ -29,6 +29,7 @@ src/
 ├── styles/            # CSS
 └── App.tsx            # Main entry
 src-tauri/             # Rust backend
+~/.scode/              # App data directory (logs, cache)
 ```
 
 ## Code Style
@@ -42,8 +43,16 @@ src-tauri/             # Rust backend
 
 - **NO borders** - Use `bg-muted/50` and spacing instead
 - **NO Card components** - Use custom div with `bg-muted/50 rounded-xl`
+- **Use `bg-muted/50` only for content sections** - NOT for toolbars, search bars, or action areas
 - Consistent page layout across all pages (see existing pages for pattern)
 - Use Lucide icons from `lucide-react`
+- **Dangerous operations require confirmation dialogs** (uninstall, delete, etc.)
+
+## App Data Directory
+
+All app data is stored in `~/.scode/`:
+- `~/.scode/logs/` - Operation logs (homebrew.log, etc.)
+- `~/.scode/cache/` - Cache files
 
 ## Configuration Files (Claude Code)
 
@@ -60,3 +69,4 @@ src-tauri/             # Rust backend
 - Use Card components for simple layouts
 - Access file system directly (use Tauri APIs)
 - Modify files in `src/components/ui/`
+- Allow dangerous operations without confirmation

@@ -7,6 +7,33 @@
   ],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",
+    "fs:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [
+        {
+          "path": "$HOME/.claude.json"
+        },
+        {
+          "path": "$HOME/.claude"
+        },
+        {
+          "path": "$HOME/.claude/**"
+        },
+        {
+          "path": "$HOME/.scode"
+        },
+        {
+          "path": "$HOME/.scode/**"
+        },
+        {
+          "path": "/opt/homebrew"
+        },
+        {
+          "path": "/usr/local/Homebrew"
+        }
+      ]
+    }
   ]
 }
