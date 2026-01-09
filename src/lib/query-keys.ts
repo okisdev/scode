@@ -29,6 +29,7 @@ export const queryKeys = {
     all: ['mcp'] as const,
     servers: () => [...queryKeys.mcp.all, 'servers'] as const,
     globalServers: () => [...queryKeys.mcp.servers(), 'global'] as const,
+    projects: () => [...queryKeys.mcp.all, 'projects'] as const,
     projectServers: (projectPath: string) =>
       [...queryKeys.mcp.servers(), 'project', projectPath] as const,
   },
@@ -40,5 +41,15 @@ export const queryKeys = {
     settings: () => [...queryKeys.claudeCode.all, 'settings'] as const,
     localSettings: () =>
       [...queryKeys.claudeCode.all, 'local-settings'] as const,
+    // Usage
+    usage: () => [...queryKeys.claudeCode.all, 'usage'] as const,
+    usageSummary: () => [...queryKeys.claudeCode.usage(), 'summary'] as const,
+    dailyUsage: (days?: number) =>
+      [...queryKeys.claudeCode.usage(), 'daily', { days }] as const,
+    sessionUsage: () => [...queryKeys.claudeCode.usage(), 'sessions'] as const,
+    recentUsage: (minutes?: number) =>
+      [...queryKeys.claudeCode.usage(), 'recent', { minutes }] as const,
+    projectUsage: () => [...queryKeys.claudeCode.usage(), 'projects'] as const,
+    modelUsage: () => [...queryKeys.claudeCode.usage(), 'models'] as const,
   },
 } as const;

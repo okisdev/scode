@@ -1,5 +1,11 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { Home, Settings } from 'lucide-react';
+import { ChevronRight, Home, Settings } from 'lucide-react';
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
   Sidebar,
   SidebarContent,
@@ -11,15 +17,30 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { useSoftware } from '@/hooks/use-software';
+import {
+  getSectionsForSoftware,
+  isRouteInGroup,
+  type Route,
+} from '@/lib/navigation';
 
 interface AppSidebarProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
+  route: Route;
+  onNavigate: (route: Route) => void;
+  expandedGroups: Set<string>;
+  onToggleGroup: (groupId: string) => void;
 }
 
-export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
+export function AppSidebar({
+  route,
+  onNavigate,
+  expandedGroups,
+  onToggleGroup,
+}: AppSidebarProps) {
   const { enabled } = useSoftware();
 
   const handleDragStart = () => {
@@ -42,7 +63,7 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentPage === 'home'}
+                  isActive={route === 'home'}
                   onClick={() => onNavigate('home')}
                   tooltip='Home'
                 >
@@ -59,18 +80,72 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
             <SidebarGroupLabel>Software</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {enabled.map((software) => (
-                  <SidebarMenuItem key={software.id}>
-                    <SidebarMenuButton
-                      isActive={currentPage === software.id}
-                      onClick={() => onNavigate(software.id)}
-                      tooltip={software.name}
-                    >
-                      <software.icon />
-                      <span>{software.name}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {enabled.map((software) => {
+                  const sections = getSectionsForSoftware(software.id);
+                  const isExpanded = expandedGroups.has(software.id);
+                  const isGroupActive = isRouteInGroup(route, software.id);
+
+                  // Software with sub-sections (collapsible)
+                  if (sections) {
+                    return (
+                      <Collapsible
+                        className='group/collapsible'
+                        key={software.id}
+                        onOpenChange={() => onToggleGroup(software.id)}
+                        open={isExpanded}
+                      >
+                        <SidebarMenuItem>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton
+                              isActive={isGroupActive && !isExpanded}
+                              tooltip={software.name}
+                            >
+                              <software.icon />
+                              <span>{software.name}</span>
+                              <ChevronRight
+                                className={`ml-auto transition-transform duration-200 ${
+                                  isExpanded ? 'rotate-90' : ''
+                                }`}
+                              />
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {sections.map((section) => {
+                                const sectionRoute =
+                                  `${software.id}/${section.id}` as Route;
+                                return (
+                                  <SidebarMenuSubItem key={section.id}>
+                                    <SidebarMenuSubButton
+                                      isActive={route === sectionRoute}
+                                      onClick={() => onNavigate(sectionRoute)}
+                                    >
+                                      <span>{section.label}</span>
+                                    </SidebarMenuSubButton>
+                                  </SidebarMenuSubItem>
+                                );
+                              })}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </SidebarMenuItem>
+                      </Collapsible>
+                    );
+                  }
+
+                  // Software without sub-sections (simple button)
+                  return (
+                    <SidebarMenuItem key={software.id}>
+                      <SidebarMenuButton
+                        isActive={route === software.id}
+                        onClick={() => onNavigate(software.id as Route)}
+                        tooltip={software.name}
+                      >
+                        <software.icon />
+                        <span>{software.name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -80,7 +155,7 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              isActive={currentPage === 'settings'}
+              isActive={route === 'settings'}
               onClick={() => onNavigate('settings')}
               tooltip='Settings'
             >
